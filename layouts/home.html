@@ -37,72 +37,32 @@
   <h2 class="funky-font">Let's keep in touch</h2>
   <p>Where can we send you news and updates?</p>
 
-  <div id="mlb2-44221031"
-    class="ml-form-embedContainer ml-subscribe-form ml-subscribe-form-44221031 mx-auto w-full max-w-md mt-4">
-    <div class="row-form">
-      <form class="ml-block-form space-y-4"
-        action="https://assets.mailerlite.com/jsonp/635550/forms/194240036898604715/subscribe" method="post"
-        target="_blank">
-        <div>
-          <label for="newsletter-name" class="sr-only">Name</label>
+  <form action="/api/subscribe" method="post" class="mx-auto w-full max-w-md space-y-4">
+    <input
+      type="text"
+      name="name"
+      placeholder="Name"
+      autocomplete="name"
+      class="w-full rounded border border-white bg-white px-4 py-3 text-black"
+    >
+  
+    <input
+      type="email"
+      name="email"
+      placeholder="Email"
+      autocomplete="email"
+      required
+      class="w-full rounded border border-white bg-white px-4 py-3 text-black"
+    >
+  
+    <button
+      type="submit"
+      class="w-full cursor-pointer rounded border border-white bg-white px-4 py-3 font-bold uppercase text-black"
+    >
+      Send
+    </button>
+  </form>  
 
-          <input id="newsletter-name" type="text" name="fields[name]" placeholder="Name" autocomplete="name"
-            class="rounded w-full border border-white bg-white px-4 py-3 text-black placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-white">
-        </div>
-
-        <div class="ml-validate-email ml-validate-required">
-          <label for="newsletter-email" class="sr-only">Email</label>
-
-          <input id="newsletter-email" type="email" name="fields[email]" placeholder="Email" autocomplete="email"
-            required
-            class="rounded w-full border border-white bg-white px-4 py-3 text-black placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-white">
-        </div>
-
-        <input type="hidden" name="ml-submit" value="1">
-        <input type="hidden" name="anticsrf" value="true">
-
-        <div class="ml-form-embedSubmit">
-          <button type="submit"
-            class="rounded cursor-pointer primary w-full border border-white bg-white px-4 py-3 font-bold uppercase tracking-wide text-black transition hover:bg-black hover:text-white">
-            Send
-          </button>
-
-          <button disabled type="button"
-            class="rounded loading hidden w-full border border-white bg-white px-4 py-3 font-bold uppercase text-black">
-            Sending
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <div class="row-success hidden py-6 text-center text-white">
-      <h4 class="text-2xl font-bold uppercase">Thank you</h4>
-      <p class="mt-2">We'll be in touch.</p>
-    </div>
-  </div>
-
-  <script>
-    function ml_webform_success_44221031() {
-      document
-        .querySelector(".ml-subscribe-form-44221031 .row-form")
-        ?.classList.add("hidden");
-
-      document
-        .querySelector(".ml-subscribe-form-44221031 .row-success")
-        ?.classList.remove("hidden");
-    }
-  </script>
-
-  <script src="https://groot.mailerlite.com/js/w/webforms.min.js?v83147fa8ce2d95cb73ece7f28b469519"
-    type="text/javascript"></script>
-
-  <script>
-    fetch(
-      "https://assets.mailerlite.com/jsonp/635550/forms/194240036898604715/takel"
-    );
-  </script>
-
-  {{/* <div class="ml-embedded" data-form="i2ucpr"></div>  */}}
 </section>
 {{ end }}
 {{ end }}

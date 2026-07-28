@@ -1,7 +1,16 @@
 {
   "name": "arthurgorries",
   "compatibility_date": "2026-07-28",
+
   "assets": {
     "directory": "./public"
-  }
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "arthurgorries-db",
+      "database_id": "691be321-21b6-465f-804b-dd3db14b06e9"
+    }
+  ]
 }
