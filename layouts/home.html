@@ -35,33 +35,20 @@
 {{ if .Params.enable }}
 <section id="newsletter">
   <h2 class="funky-font">Let's keep in touch</h2>
-  <p>Where can we send you news and updates?</p>
+  <p class="mb-4">Where can we send you news and updates?</p>
 
   <form action="/api/subscribe" method="post" class="mx-auto w-full max-w-md space-y-4">
-    <input
-      type="text"
-      name="name"
-      placeholder="Name"
-      autocomplete="name"
-      class="w-full rounded border border-white bg-white px-4 py-3 text-black"
-    >
-  
-    <input
-      type="email"
-      name="email"
-      placeholder="Email"
-      autocomplete="email"
-      required
-      class="w-full rounded border border-white bg-white px-4 py-3 text-black"
-    >
-  
-    <button
-      type="submit"
-      class="w-full cursor-pointer rounded border border-white bg-white px-4 py-3 font-bold uppercase text-black"
-    >
+    <input type="text" name="name" placeholder="Name" autocomplete="name"
+      class="w-full rounded border border-white bg-white px-4 py-3 text-black">
+
+    <input type="email" name="email" placeholder="Email" autocomplete="email" required
+      class="w-full rounded border border-white bg-white px-4 py-3 text-black">
+
+    <button type="submit"
+      class="w-full cursor-pointer rounded border border-white bg-white px-4 py-3 font-bold uppercase text-black">
       Send
     </button>
-  </form>  
+  </form>
 
 </section>
 {{ end }}

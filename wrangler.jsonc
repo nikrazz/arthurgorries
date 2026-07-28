@@ -1,9 +1,12 @@
 {
   "name": "arthurgorries",
+  "main": "./src/index.js",
   "compatibility_date": "2026-07-28",
 
   "assets": {
-    "directory": "./public"
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
   },
 
   "d1_databases": [
