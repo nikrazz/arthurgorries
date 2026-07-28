@@ -1,0 +1,70 @@
+<!doctype html>
+<html itemscope class="{{- if not site.Params.theme_switcher -}}
+    {{- site.Params.theme_default -}}
+  {{- end -}}" lang="{{ site.Language.Locale | default `en-US` }}" itemtype="http://schema.org/WebPage">
+
+  <head>
+    <!-- head (don't cache it) -->
+    {{ partial "essentials/head.html" . }}
+
+
+    <!-- style (always cache it) -->
+    {{ partialCached "essentials/style.html" . }}
+
+    <!-- MailerLite Universal -->
+    <script>
+      (function (w, d, e, u, f, l, n) {
+        w[f] = w[f] || function () {
+          (w[f].q = w[f].q || [])
+            .push(arguments);
+        }, l = d.createElement(e), l.async = 1, l.src = u,
+          n = d.getElementsByTagName(e)[0], n.parentNode.insertBefore(l, n);
+      })
+        (window, document, 'script', 'https://assets.mailerlite.com/js/universal.js', 'ml');
+      ml('account', '635550');
+    </script>
+    <!-- End MailerLite Universal -->
+
+    <!-- Homepage headline font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Walter+Turncoat&display=swap" rel="stylesheet">
+
+  </head>
+
+  <body class="flex flex-col min-h-screen">
+    <!-- cache partial only in production -->
+    {{ if hugo.IsProduction }}
+    {{ partialCached "preloader.html" . }}
+    {{ partialCached "gtm-noscript.html" . }}
+    {{ else }}
+    {{ partial "preloader.html" . }}
+
+
+    <!-- tailwind size indicator -->
+    {{ partial "components/tw-size-indicator.html" . }}
+    {{ end }}
+
+
+    <!-- announcement -->
+    {{ partialCached "announcement.html" . }}
+
+
+    <!-- header (don't cache it) -->
+    {{/* {{ partial "essentials/header.html" . }} */}}
+    {{ partial "search-modal.html" (dict "Context" . ) }}
+
+
+    <main class="grow">
+      {{ block "main" . }}{{ end }}
+    </main>
+
+    <!-- footer -->
+    {{/* {{ partial "essentials/footer.html" . }} */}}
+
+
+    <!-- script (always cache it) -->
+    {{ partialCached "essentials/script.html" . }}
+  </body>
+
+</html>

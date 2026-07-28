@@ -1,11 +1,14 @@
 ---
 # Banner
 banner:
-  title: "The Ultimate Starter Template You Need To Start Your Hugo Project"
-  content: "Hugoplate is a free starter template built with Hugo and TailwindCSS, providing everything you need to jump-start your Hugo project and save valuable time."
+  title: "Loud, young and not asking permission."
+  content: |-
+    Brothers Noah and Ivan started making noise together in early 2026. Then they met Ethan at a Mini Skirt show, gave him a bass, and made the problem worse.
+    
+    Leave your email below for shows, releases and other bad decisions.
   image: "/images/banner.png"
   button:
-    enable: true
+    enable: false
     label: "Fork Deploy and Edit Online 🚀"
     link: "https://app.sitepins.com/new/clone?name=Hugoplate&repository=https://github.com/zeon-studio/hugoplate?aff=hugoplate"
 

@@ -1,1 +1,29 @@
-/* Add your own custom styles here */
+html,
+body {
+  min-height: 100%;
+  background-color: #000;
+  color: #fff;
+}
+
+main,
+section,
+.header,
+.footer {
+  background-color: transparent;
+}
+
+:is(h1, h2, h3, h4, h5, h6) {
+  color: #fff;
+}
+
+#newsletter {
+  max-width: 700px;
+  margin-inline: auto;
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.funky-font {
+  font-family: "Walter Turncoat", sans-serif;
+  font-weight: 400;
+}
