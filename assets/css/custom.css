@@ -27,3 +27,11 @@ section,
   font-family: "Walter Turncoat", sans-serif;
   font-weight: 400;
 }
+
+// Overrides
+
+.ml-form-successContent h4,
+.ml-form-successContent p:last-child {
+  text-align: center;
+  color: #fff;
+}
