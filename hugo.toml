@@ -8,9 +8,9 @@ summaryLength = 10
 disableKinds = ["taxonomy", "term"]
 
 ########################### Services #############################
-[services]
-[services.googleAnalytics]
-ID = 'G-MEASUREMENT_ID' # see https://gohugo.io/templates/internal/#configure-google-analytics
+# [services]
+# [services.googleAnalytics]
+# ID = 'G-MEASUREMENT_ID'
 
 ########################## Permalinks ############################
 [permalinks.page]
