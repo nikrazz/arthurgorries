@@ -1,10 +1,7 @@
 ---
 title: "Elements"
-# meta title
-meta_title: ""
-# meta description
-description: "This is meta description"
-# save as draft
+meta_title: "Page elements"
+description: "Page elements shown"
 draft: true
 ---
 
