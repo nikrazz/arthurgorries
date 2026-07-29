@@ -9,8 +9,16 @@ banner:
   image: "/images/arthur-gorries.png"
   button:
     enable: false
-    label: "Fork Deploy and Edit Online 🚀"
-    link: "https://app.sitepins.com/new/clone?name=Hugoplate&repository=https://github.com/zeon-studio/hugoplate?aff=hugoplate"
+    label: "Fork Deploy and Edit Online"
+    link: ""
+
+newsletter:
+  title: "Let's keep in touch"
+  content: "Leave your email below for shows, releases and other bad decisions."
+  confirmation:
+    title: "You're in da club now"
+    content: "We'll let you know when the noise starts."
+    error_message: "Something went wrong. Try again."
 
 # Features
 features:

@@ -1,14 +1,11 @@
 ######################## default configuration ####################
-# The base URL of your site (required). This will be prepended to all relative URLs.
 baseURL = "https://arthurgorries.com/"
-# Title of your website (required).
 title = "Arthur Gorries punk band"
-# Your theme name
 theme = "hugoplate"
-# Default time zone for time stamps; use any valid tz database name: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
 timeZone = "Australia/Brisbane"
-# post excerpt
-summaryLength = 10 # see https://gohugo.io/content-management/summaries/#automatic-summary
+summaryLength = 10
+# Disable tags and categories
+disableKinds = ["taxonomy", "term"]
 
 ########################### Services #############################
 [services]
