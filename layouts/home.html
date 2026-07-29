@@ -8,7 +8,7 @@
         {{ partial "image" (dict "Src" .image "Alt" "Arthur Gorries logo" "Loading" "eager" "Class" "mx-auto w-full !max-w-[180px] sm:!max-w-[300px]" "DisplayXL" "800x" ) }}
       </div>
       <div class="lg:col-7 md:col-9 mb-8 text-center">
-        <h1 class="funky-font mb-4 text-h3 lg:text-h2">
+        <h1 class="funky-font mb-4 text-h3 lg:text-h1">
           {{ .title | markdownify }}
         </h1>
         <div class="mb-8 space-y-6">
@@ -33,7 +33,7 @@
 {{ with site.GetPage "sections/signup" }}
 {{ if .Params.enable }}
 <section id="newsletter">
-  <h2 class="funky-font">Let's keep in touch</h2>
+  <h2 class="funky-font text-h4 lg:text-h3">Let's keep in touch</h2>
   <p class="mb-4">Where can we send you news and updates?</p>
 
   <div id="newsletter-signup">
@@ -45,7 +45,7 @@
         class="w-full rounded border border-white bg-white px-4 py-3 text-black">
 
       <button type="submit"
-        class="w-full cursor-pointer rounded border border-white bg-white px-4 py-3 font-bold uppercase text-black">
+        class="w-full cursor-pointer hover:bg-gray-200 hover:border-gray-200 rounded border border-white bg-white px-4 py-3 font-bold uppercase text-black">
         Send
       </button>
     </form>
