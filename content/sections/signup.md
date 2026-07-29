@@ -1,5 +1,5 @@
 ---
 enable: true
 title: "Let's keep in touch"
-content: "Where can we send you news and updates?"
+content: "Leave your email below for shows, releases and other bad decisions."
 ---

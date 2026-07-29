@@ -2,12 +2,7 @@
 # Banner
 banner:
   title: "Loud, young and not asking permission."
-  content: |-
-    Brothers Noah and Ivan started making noise together in early 2026. Then they met Ethan at a Mini Skirt gig, gave him a bass, and made the problem worse.
-    
-    Leave your email below for shows, releases and other bad decisions.
-  newsletter_heading: "Let's keep in touch"
-  newsletter_subheading: "Where can we send you news and updates?"
+  content: "Brothers Noah and Ivan started making noise together in early 2026. Then they met Ethan at a Mini Skirt gig, gave him a bass, and made the problem worse."    
   image: "/images/arthur-gorries.png"
   button:
     enable: false
