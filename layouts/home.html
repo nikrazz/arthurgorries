@@ -1,13 +1,13 @@
 {{ define "main" }}
 <!-- Banner -->
 {{ with .Params.banner }}
-<section class="section pt-14 pb-0">
+<section class="pt-4">
   <div class="container">
     <div class="row justify-center">
       <div class="col-12 mb-8">
         {{ partial "image" (dict "Src" .image "Alt" "Arthur Gorries logo" "Loading" "eager" "Class" "mx-auto w-full !max-w-[180px] sm:!max-w-[300px]" "DisplayXL" "800x" ) }}
       </div>
-      <div class="lg:col-7 md:col-9 mb-8 text-center">
+      <div class="lg:col-7 md:col-9 text-center">
         <h1 class="funky-font mb-4 text-gray-200 text-h3 lg:text-h1">
           {{ .title | markdownify }}
         </h1>
@@ -31,7 +31,7 @@
 
 <!-- Signup Form -->
 {{ with .Params.newsletter }}
-<section id="newsletter">
+<section class="mx-auto max-w-2xl px-8 text-center" id="newsletter">
   <h2 class="funky-font text-gray-200 text-h4 lg:text-h3">{{ .title }}</h2>
   <p class="mb-4 text-gray-300">{{ .content }}</p>
 
