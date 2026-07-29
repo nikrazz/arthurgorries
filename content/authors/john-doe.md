@@ -1,4 +1,5 @@
 ---
+draft: true
 title: John Doe
 email: johndoe@email.com
 image: "/images/avatar.png"
