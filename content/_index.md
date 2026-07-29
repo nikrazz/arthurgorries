@@ -6,7 +6,7 @@ banner:
     Brothers Noah and Ivan started making noise together in early 2026. Then they met Ethan at a Mini Skirt show, gave him a bass, and made the problem worse.
     
     Leave your email below for shows, releases and other bad decisions.
-  image: "/images/banner.png"
+  image: "/images/arthur-gorries.png"
   button:
     enable: false
     label: "Fork Deploy and Edit Online 🚀"
