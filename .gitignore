@@ -14,4 +14,3 @@ jsconfig.json
 go.sum
 yarn.lock
 .hugo_build.lock
-hugo_state.json
