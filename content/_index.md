@@ -3,7 +3,7 @@
 banner:
   title: "Loud, young and not asking permission."
   content: |-  
-    Arthur Gorries was formed when brothers Noah and Ivan started making noise together in early 2026. Then they met Ethan at a Mini Skirt gig, gave him a bass, and made the problem worse.
+    Arthur Gorries was formed in Brisbane when brothers Noah and Ivan started making noise together in early 2026. Then they met Ethan at a Mini Skirt gig, gave him a bass, and made the problem worse.
 
     The name came from the prison down the road. Wacol has worse landmarks.
     
