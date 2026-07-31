@@ -9,9 +9,9 @@ summaryLength = 10
 disableKinds = ["taxonomy", "term"]
 
 ########################### Services #############################
-[services]
-[services.googleAnalytics]
-ID = 'G-BK2BH8XB57'
+# [services]
+# [services.googleAnalytics]
+# ID = 'G-BK2BH8XB57'
 
 ########################## Permalinks ############################
 [permalinks.page]
