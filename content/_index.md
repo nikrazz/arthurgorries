@@ -8,7 +8,7 @@ banner:
     The name came from the prison down the road. Wacol has worse landmarks.
     
     And this is only the beginning.
-  image: "/images/arthur-gorries.png"
+  image: "/images/arthur-gorries-logo.png"
   button:
     enable: false
     label: "Fork Deploy and Edit Online"
