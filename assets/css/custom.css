@@ -12,10 +12,6 @@ section,
   background-color: transparent;
 }
 
-:is(h1, h2, h3, h4, h5, h6) {
-  color: #fff;
-}
-
 .funky-font {
   font-family: "Staatliches", sans-serif;
   font-weight: 400;
