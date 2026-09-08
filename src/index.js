@@ -18,7 +18,7 @@ export default {
           );
         }
 
-        // Save subscriber in D1
+        // New rows default to unsynced; duplicate signups preserve sync status.
         await env.DB.prepare(
           `INSERT INTO subscribers (name, email)
            VALUES (?, ?)
@@ -56,6 +56,22 @@ export default {
               email,
               response: brevoError,
             });
+          } else {
+            try {
+              await env.DB.prepare(
+                `UPDATE subscribers
+                 SET brevo_synced = 1, brevo_synced_at = CURRENT_TIMESTAMP
+                 WHERE email = ?`
+              )
+                .bind(email)
+                .run();
+            } catch (error) {
+              // Capture already succeeded; tracking failure must not fail signup.
+              console.error("Brevo sync status update failed:", {
+                email,
+                error: error instanceof Error ? error.message : String(error),
+              });
+            }
           }
         } catch (error) {
           console.error("Brevo sync failed:", {
