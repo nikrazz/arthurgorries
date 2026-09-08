@@ -18,6 +18,7 @@ export default {
           );
         }
 
+        // Save subscriber in D1
         await env.DB.prepare(
           `INSERT INTO subscribers (name, email)
            VALUES (?, ?)
@@ -25,6 +26,33 @@ export default {
         )
           .bind(name || null, email)
           .run();
+
+        // Add subscriber to Brevo
+        const brevoResponse = await fetch(
+          "https://api.brevo.com/v3/contacts",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "api-key": env.BREVO_API_KEY,
+            },
+            body: JSON.stringify({
+              email,
+              attributes: {
+                FIRSTNAME: name,
+              },
+              listIds: [2],
+              updateEnabled: true,
+            }),
+          }
+        );
+
+        if (!brevoResponse.ok) {
+          const brevoError = await brevoResponse.text();
+          console.error("Brevo error:", brevoError);
+
+          throw new Error("Brevo contact creation failed");
+        }
 
         return Response.redirect(
           new URL("/?signup=success#newsletter", request.url),
