@@ -1,102 +1,412 @@
-<!-- BEGIN:hugo-agent-rules -->
+# Arthur Gorries Website
 
-# Hugo: verify against docs, not memory
+## Project
 
-Treat <https://gohugo.io/documentation/> as truth. Two project specifics your training data gets wrong:
+Arthur Gorries is a punk/garage-rock band website:
 
-1. **New template system** (Hugo 0.146+): partials in `layouts/_partials/`, homepage is `home.html`, `baseof.html` is top-level. Never "fix" to `partials/`, `index.html`, or `_default/baseof.html`.
-2. **Tailwind CSS v4**, CSS-first via `@theme`/`data/theme.json` -> `generated-theme.css`, imported in `assets/css/main.css`. No `tailwind.config.js`.
+https://arthurgorries.com/
 
-<!-- END:hugo-agent-rules -->
+Keep the site simple, fast, and easy to maintain. Avoid adding frameworks, services, abstractions, or dependencies unless they solve a current requirement.
 
-<!-- BEGIN:package-manager-rules -->
+## Stack
 
-# Detect the package manager — don't assume pnpm
+* Hugo
+* Hugoplate theme
+* Tailwind CSS v4
+* Vanilla JavaScript
+* GitHub
+* Cloudflare Workers + Static Assets
+* Cloudflare D1
+* Brevo for mailing-list management and email delivery
 
-Commands below use `<pm>` as a placeholder for this project's package manager:
+Production deploys automatically from GitHub through Cloudflare.
 
-1. `package.json` → `"packageManager"` field, if present — authoritative.
-2. Otherwise, a lock file in the project root: `pnpm-lock.yaml` → `pnpm`, `package-lock.json` → `npm`, `yarn.lock` → `yarn`, `bun.lock`/`bun.lockb` → `bun`.
-3. No lock file yet (deps not installed) → default to **yarn**.
+---
 
-<!-- END:package-manager-rules -->
+# Hugo project rules
 
-<!-- BEGIN:setup-mode-detection-rules -->
+## Hugo 0.146+ template system
 
-# Detect setup mode, then convert to project-setup FIRST before changing or reading anything, after project-setup check the edge case rules
+This project uses Hugo's newer template system.
 
-This theme ships in two structures; the same logical file lives at a different path in each. Detect before touching anything:
+Use the current Hugo documentation as the source of truth:
 
-- **`exampleSite/hugo.toml` exists → theme-setup** — theme at root (`layouts/`, `assets/`, `theme.toml`), demo site in `exampleSite/`.
-- **Root `hugo.toml` + `themes/` → project-setup** — site at root (`content/`, `config/`, `data/`, `hugo.toml`), theme vendored in `themes/<theme>/` (the single folder under `themes/` — run `ls themes/` to confirm its name; in this repo it's `hugoplate`).
+https://gohugo.io/documentation/
 
-### Edge case
+Important project conventions:
 
-If all of the following are true:
+* Partials belong under `layouts/_partials/`
+* Homepage layout is `layouts/home.html`
+* `layouts/baseof.html` is top-level
+* Do not change these to older Hugo conventions such as:
 
-- `exampleSite/` exists
-- `themes/<theme>/` exists
-- `exampleSite/hugo.toml` is the active Hugo config
-- `themes/<theme>/layouts/home.html` does **not** exist
+  * `layouts/partials/`
+  * `layouts/index.html`
+  * `layouts/_default/baseof.html`
 
-then treat the repository as **theme-setup**, not **project-setup**. So Before running `<pm> project-setup` or `<pm> dev` ask user if they want to delete the `themes/` directory and run `<pm> project-setup` to convert to project-setup, deleting `themes/` is required otherwise when running `<pm> project-setup`, it will detect current mode as `project-setup` which is false.
+Do not modify files inside `themes/hugoplate/` unless there is no reasonable project-level override.
 
-**Always work in project-setup.** If the repo is currently in theme-setup, run `<pm> project-setup` BEFORE editing any content, config, layout, or style file — this is non-negotiable. The script is idempotent (it logs "Project already setup" and no-ops if already converted), so it's always safe to run. Never move files between modes by hand — only `<pm> project-setup` / `<pm> theme-setup` (reverse).
+Prefer overrides in the site's own:
 
-Full detail and path-resolution table: `template-guidance` skill → `references/detect-mode.md`.
-
-<!-- END:setup-mode-detection-rules -->
-
-<!-- BEGIN:preflight-checks-rules -->
-
-# Pre-flight checks before running, starting or reading the project in **project-setup**
-
-Before `<pm> install` / `<pm> dev` / `<pm> build` / `<pm> preview` (or any other request to run/build/preview the project), verify all of:
-
-1. **Setup mode** — project-setup (see above); run `<pm> project-setup` first if not.
-2. **Node** — `node -v` succeeds.
-3. **Hugo Extended, version == `HUGO_VERSION` in `netlify.toml`** — read `[build.environment].HUGO_VERSION` from `netlify.toml`; run `hugo version` and confirm output contains `extended` AND the version matches **exactly** (not just `>=`).
-4. **Package manager (`<pm>`)** — see package-manager detection above; confirm `<pm> -v` succeeds.
-
-   If any check fails — tool missing, Hugo not the extended build, or Hugo version doesn't match `HUGO_VERSION` from `netlify.toml` — **stop and ask the user to install/upgrade it**; don't try to work around it. Recommend [mise](https://mise.jdx.dev/) also ask user to run `eval "$(mise activate zsh)"` to activate the correct environment after installing hugo version with mise.
-
-- Install mise if missing (see mise's install docs for the OS).
-- Version mismatch (wrong version or not extended) → `mise use hugo-extended@<HUGO_VERSION>` using the value from `netlify.toml` (currently `mise use hugo-extended@0.160.0`) — installs and pins the exact build this project requires.
-- Node and package manager: `mise use node@lts` and `mise use <pm>@latest` (or the user's existing version manager).
-
-<!-- END:preflight-checks-rules -->
-
-<!-- BEGIN:running-the-project-rules -->
-
-# Running the project
-
-**Even for a plain "run/build/preview the project" request**: run the pre-flight checks above first. If the repo is in theme-setup, run `<pm> project-setup` first, then use the project-setup commands below — don't reach for the `:example` scripts as a shortcut to avoid converting.
-
-Package manager is `<pm>` (see package-manager detection above). Always use these scripts — never run bare `hugo`/`hugo server`.
-
-| Command        | Use                                                               |
-| -------------- | ----------------------------------------------------------------- |
-| `<pm> install` | install dependencies (first run / after pulling)                  |
-| `<pm> dev`     | dev server with live theme regen, default `http://localhost:1313` |
-| `<pm> build`   | production build to `public/`                                     |
-| `<pm> preview` | production-flavored local server                                  |
-
-The `dev:example` / `build:example` / `preview:example` variants exist only for theme-setup (running against `exampleSite/`) — once converted via `<pm> project-setup`, they no longer apply.
-
-## Restart the dev server after changes
-
-After changing content, code, or layouts etc., restart it:
-
-```sh
-npx kill-port 1313 -y && <pm> dev
+```text
+layouts/
+assets/
+content/
+data/
+config/
 ```
 
-<!-- END:running-the-project-rules -->
+## Tailwind CSS
 
-<!-- BEGIN:template-guidance-rules -->
+This project uses Tailwind CSS v4.
 
-# Read template guidance before changing or reading structure
+Tailwind configuration is CSS-first and uses the existing Hugoplate theme system.
 
-Before modifying or reading structure, styles, pages, config, content, or scripts, trigger the `template-guidance` skill for the relevant reference so you follow project conventions (modes, theme tokens, Hugo Modules, the theme generator, adding languages).
+Do not create a `tailwind.config.js`.
 
-<!-- END:template-guidance-rules -->
+Use Tailwind utilities for styling wherever practical.
+
+Prefer Tailwind's standard:
+
+* spacing
+* width
+* colour
+* typography
+* responsive breakpoint
+
+scales over arbitrary values.
+
+Use custom CSS only when Tailwind is unsuitable.
+
+---
+
+# Package manager
+
+Detect the package manager instead of assuming one.
+
+Priority:
+
+1. `package.json` → `packageManager`
+2. lock file:
+
+   * `pnpm-lock.yaml` → pnpm
+   * `package-lock.json` → npm
+   * `yarn.lock` → yarn
+   * `bun.lock` / `bun.lockb` → bun
+3. otherwise inspect the existing project before choosing
+
+Do not change package managers unless explicitly requested.
+
+---
+
+# Development
+
+Before completing changes, run an appropriate build check.
+
+At minimum:
+
+```sh
+hugo
+```
+
+If the project has an existing package-script build process that performs additional required Tailwind/theme generation, use that as well.
+
+Do not rewrite working build tooling unnecessarily.
+
+Do not commit generated `public/` files unless the repository already intentionally tracks them.
+
+---
+
+# General development principles
+
+* Prefer the simplest implementation that solves the task.
+* Preserve the existing architecture.
+* Do not introduce React, Vue, Next.js, or another frontend framework.
+* Prefer Hugo templates and vanilla JavaScript.
+* Keep changes focused on the requested task.
+* Do not perform unrelated refactors.
+* Keep content editable through Hugo front matter when practical.
+* Preserve the site's existing dark, minimal punk/garage-rock visual style.
+
+---
+
+# Cloudflare
+
+The site uses Cloudflare Workers with static assets.
+
+Worker entry point:
+
+```text
+src/index.js
+```
+
+Static site assets are served through:
+
+```js
+env.ASSETS
+```
+
+API requests are handled by the Worker.
+
+Cloudflare configuration lives in:
+
+```text
+wrangler.jsonc
+```
+
+Do not put secrets in `wrangler.jsonc`.
+
+---
+
+# Newsletter signup
+
+Current endpoint:
+
+```text
+POST /api/subscribe
+```
+
+Successful signup redirects to:
+
+```text
+/?signup=success#newsletter
+```
+
+Invalid and failed submissions use equivalent `signup` query-string states.
+
+The website signup flow is:
+
+```text
+Website form
+    |
+    v
+Cloudflare Worker
+    |
+    +--> D1
+    |
+    +--> Brevo API
+```
+
+## D1 is guaranteed capture
+
+D1 is the site's guaranteed subscriber record.
+
+Database:
+
+```text
+arthurgorries-db
+```
+
+Worker binding:
+
+```text
+DB
+```
+
+Table:
+
+```text
+subscribers
+```
+
+Existing core fields:
+
+```text
+id
+name
+email
+created_at
+```
+
+Normalize email addresses to lowercase before storage and comparison.
+
+A successful D1 write means the website signup is successful.
+
+A Brevo failure must not cause a successful D1 signup to be reported as failed.
+
+---
+
+# Brevo
+
+Brevo contact list ID:
+
+```text
+2
+```
+
+The Brevo API key is available through the Cloudflare Worker secret:
+
+```text
+BREVO_API_KEY
+```
+
+Never hard-code, print, or commit this value.
+
+Website subscribers are synced to Brevo through the Contacts API using:
+
+```js
+listIds: [2]
+updateEnabled: true
+```
+
+Brevo is the operational authority for whether somebody should currently receive marketing email.
+
+D1 remains the site's record of the subscription lifecycle.
+
+---
+
+# Error handling
+
+## Validation or D1 failure
+
+If form processing or D1 storage fails:
+
+* log the error
+* do not report signup success
+* redirect using the existing error state
+
+## Brevo failure
+
+If D1 succeeds but Brevo fails:
+
+* retain the D1 subscriber
+* still report signup success to the visitor
+* log the Brevo failure
+* track the failed sync once sync-status tracking exists
+
+Do not throw Brevo API failures into the outer D1/form failure handler.
+
+---
+
+# Pending work
+
+## 1. Track Brevo sync status in D1
+
+Add persistent sync tracking.
+
+Suggested fields:
+
+```text
+brevo_synced INTEGER NOT NULL DEFAULT 0
+brevo_synced_at TEXT NULL
+```
+
+After a successful Brevo API response:
+
+```text
+brevo_synced = 1
+brevo_synced_at = current timestamp
+```
+
+A failed Brevo request must leave the subscriber identifiable as unsynced.
+
+Do not overwrite an existing successful sync status with `0` simply because the same subscriber submits again.
+
+Do not implement automatic retry/reconciliation unless explicitly requested.
+
+---
+
+## 2. Brevo unsubscribe webhook
+
+Implement:
+
+```text
+POST /api/brevo-webhook
+```
+
+Desired flow:
+
+```text
+Brevo unsubscribe
+    |
+    v
+/api/brevo-webhook
+    |
+    v
+D1 subscriber updated
+```
+
+Do not delete subscribers when they unsubscribe.
+
+Add explicit subscription state such as:
+
+```text
+status = subscribed | unsubscribed
+unsubscribed_at
+```
+
+Requirements:
+
+* verify the current Brevo webhook payload against Brevo documentation
+* process unsubscribe events relevant to list ID `2`
+* normalize emails before lookup
+* make processing idempotent
+* ignore unrelated events safely
+* protect the webhook using an appropriate Brevo-compatible security mechanism
+* never hard-code webhook secrets
+
+---
+
+## 3. Welcome email
+
+Brevo should eventually send a welcome email automatically when a new contact is added to list `2`.
+
+This is configured in Brevo rather than implemented in the website Worker unless explicitly requested otherwise.
+
+---
+
+## 4. Existing pre-Brevo subscribers
+
+Some subscribers may exist in D1 from before Brevo integration was enabled.
+
+Do not assume all existing D1 subscribers already exist in Brevo.
+
+For the current small list, manual reconciliation is acceptable.
+
+---
+
+# D1 schema changes
+
+Schema changes must be additive and safe.
+
+Do not run destructive production database operations unless explicitly requested.
+
+When a task requires a schema change:
+
+1. modify project migration/schema files if the project uses them
+2. provide the exact SQL required for production D1
+3. explain how to verify the migration
+
+Do not delete subscriber records as part of unsubscribe handling.
+
+---
+
+# Secrets
+
+Never commit:
+
+* Brevo API keys
+* webhook secrets
+* Cloudflare API tokens
+* credentials
+* private tokens
+
+Secrets belong in Cloudflare Worker secrets/environment configuration.
+
+---
+
+# Git
+
+Do not:
+
+* rewrite Git history
+* commit secrets
+* create unrelated changes
+
+Before finishing a task:
+
+* run relevant checks
+* inspect the diff
+* report files changed
+* report any SQL that must be run
+* report any Cloudflare or Brevo configuration the user must perform manually
