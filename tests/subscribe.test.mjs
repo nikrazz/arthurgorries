@@ -8,6 +8,10 @@ const migration = await readFile(
   new URL("../migrations/0001_subscriber_brevo_sync.sql", import.meta.url),
   "utf8",
 );
+const subscriptionMigration = await readFile(
+  new URL("../migrations/0002_subscriber_subscription_state.sql", import.meta.url),
+  "utf8",
+);
 
 function setup(t, { failCapture = false, failTracking = false } = {}) {
   const db = new DatabaseSync(":memory:");
@@ -19,6 +23,7 @@ function setup(t, { failCapture = false, failTracking = false } = {}) {
   );
   INSERT INTO subscribers (name, email) VALUES ('Legacy', 'legacy@example.com');`);
   db.exec(migration);
+  db.exec(subscriptionMigration);
   const errors = t.mock.method(console, "error", () => {});
   const env = {
     BREVO_API_KEY: "deliberately-invalid-test-key",
@@ -64,6 +69,8 @@ test("migration retains legacy subscribers with unknown sync state", (t) => {
   assert.equal(row.brevo_synced, 0);
   assert.equal(row.brevo_synced_at, null);
   assert.ok(row.created_at);
+  assert.equal(row.status, "subscribed");
+  assert.equal(row.unsubscribed_at, null);
 });
 
 for (const status of [201, 204]) {
@@ -81,6 +88,7 @@ for (const status of [201, 204]) {
     });
     assertRedirect(await submit(), "success");
     assert.equal(row().brevo_synced, 1);
+    assert.equal(row().status, "subscribed");
     assert.match(row().brevo_synced_at, /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
     assert.equal(errors.mock.callCount(), 0);
   });
@@ -141,4 +149,19 @@ test("capture failure still returns signup error and skips Brevo", async (t) => 
   assertRedirect(await submit(), "error");
   assert.equal(row(), undefined);
   assert.equal(fetchMock.mock.callCount(), 0);
+});
+
+test("signup preserves a Brevo unsubscribe even when contact sync succeeds", async (t) => {
+  const { submit, db } = setup(t);
+  db.exec(`UPDATE subscribers SET status = 'unsubscribed',
+    unsubscribed_at = '2026-09-01 00:00:00' WHERE email = 'legacy@example.com'`);
+  t.mock.method(globalThis, "fetch", async (_url, options) => {
+    assert.equal("emailBlacklisted" in JSON.parse(options.body), false);
+    return new Response(null, { status: 204 });
+  });
+  assertRedirect(await submit("legacy@example.com"), "success");
+  const row = db.prepare("SELECT * FROM subscribers").get();
+  assert.equal(row.status, "unsubscribed");
+  assert.equal(row.unsubscribed_at, "2026-09-01 00:00:00");
+  assert.equal(row.brevo_synced, 1);
 });
