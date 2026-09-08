@@ -27,37 +27,49 @@ export default {
           .bind(name || null, email)
           .run();
 
-        // Add subscriber to Brevo
-        const brevoResponse = await fetch(
-          "https://api.brevo.com/v3/contacts",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "api-key": env.BREVO_API_KEY,
-            },
-            body: JSON.stringify({
-              email,
-              attributes: {
-                FIRSTNAME: name,
+        // Sync subscriber to Brevo
+        try {
+          const brevoResponse = await fetch(
+            "https://api.brevo.com/v3/contacts",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "api-key": env.BREVO_API_KEY,
               },
-              listIds: [2],
-              updateEnabled: true,
-            }),
+              body: JSON.stringify({
+                email,
+                attributes: {
+                  FIRSTNAME: name,
+                },
+                listIds: [2],
+                updateEnabled: true,
+              }),
+            }
+          );
+
+          if (!brevoResponse.ok) {
+            const brevoError = await brevoResponse.text();
+
+            console.error("Brevo sync failed:", {
+              status: brevoResponse.status,
+              email,
+              response: brevoError,
+            });
           }
-        );
-
-        if (!brevoResponse.ok) {
-          const brevoError = await brevoResponse.text();
-          console.error("Brevo error:", brevoError);
-
-          throw new Error("Brevo contact creation failed");
+        } catch (error) {
+          console.error("Brevo sync failed:", {
+            email,
+            error: error instanceof Error ? error.message : String(error),
+          });
         }
 
+        // D1 succeeded, so signup is considered successful
         return Response.redirect(
           new URL("/?signup=success#newsletter", request.url),
           303
         );
+
       } catch (error) {
         console.error("Subscription failed:", error);
 
