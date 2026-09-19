@@ -2,194 +2,224 @@
 
 ## Project
 
-Arthur Gorries is a punk/garage-rock band website:
+Arthur Gorries is a Brisbane punk/garage-rock band website.
 
-https://arthurgorries.com/
+Production: https://arthurgorries.com/
 
-Keep the site simple, fast, and easy to maintain. Avoid adding frameworks, services, abstractions, or dependencies unless they solve a current requirement.
+Keep changes simple, focused, and consistent with the existing site. Inspect the current implementation before changing it instead of assuming generic Hugo or Hugoplate conventions.
 
 ## Stack
 
-* Hugo
-* Hugoplate theme
-* Tailwind CSS v4
-* Vanilla JavaScript
-* GitHub
-* Cloudflare Workers + Static Assets
-* Cloudflare D1
-* Brevo for mailing-list management and email delivery
+- Hugo
+- Hugoplate
+- Tailwind CSS v4
+- Vanilla JavaScript
+- pnpm
+- GitHub
+- Cloudflare Workers + Static Assets
+- Cloudflare D1
+- Brevo
 
-Production deploys automatically from GitHub through Cloudflare.
+Production deploys from GitHub through Cloudflare.
 
----
+## Project structure
 
-# Hugo project rules
+Important files currently include:
 
-## Hugo 0.146+ template system
+```text
+content/_index.md
+layouts/baseof.html
+layouts/home.html
+layouts/_partials/
+assets/images/
+assets/css/custom.css
+src/index.js
+wrangler.jsonc
+hugo.toml
+package.json
+pnpm-lock.yaml
+```
 
 This project uses Hugo's newer template system.
 
-Use the current Hugo documentation as the source of truth:
+Use:
 
-https://gohugo.io/documentation/
+```text
+layouts/baseof.html
+layouts/home.html
+layouts/_partials/
+```
 
-Important project conventions:
+Do not move these to older Hugo locations such as:
 
-* Partials belong under `layouts/_partials/`
-* Homepage layout is `layouts/home.html`
-* `layouts/baseof.html` is top-level
-* Do not change these to older Hugo conventions such as:
-
-  * `layouts/partials/`
-  * `layouts/index.html`
-  * `layouts/_default/baseof.html`
+```text
+layouts/_default/baseof.html
+layouts/index.html
+layouts/partials/
+```
 
 Do not modify files inside `themes/hugoplate/` unless there is no reasonable project-level override.
 
-Prefer overrides in the site's own:
+## Homepage
+
+Homepage content lives in:
 
 ```text
-layouts/
-assets/
-content/
-data/
-config/
+content/_index.md
 ```
 
-## Tailwind CSS
+and is rendered by:
 
-This project uses Tailwind CSS v4.
+```text
+layouts/home.html
+```
 
-Tailwind configuration is CSS-first and uses the existing Hugoplate theme system.
+The homepage currently uses these front-matter sections:
 
-Do not create a `tailwind.config.js`.
+```text
+banner
+next_gig
+newsletter
+```
 
-Use Tailwind utilities for styling wherever practical.
+Keep editable copy, image paths, links, and CTA text in front matter where practical.
 
-Prefer Tailwind's standard:
+Do not rename or restructure these sections without a concrete reason.
 
-* spacing
-* width
-* colour
-* typography
-* responsive breakpoint
+## Images
 
-scales over arbitrary values.
+Site images are stored under:
 
-Use custom CSS only when Tailwind is unsuitable.
+```text
+assets/images/
+```
 
----
+Homepage front matter currently references images using paths such as:
 
-# Package manager
+```text
+/images/arthur-gorries-logo.png
+```
 
-Detect the package manager instead of assuming one.
+The site already uses the Hugoplate image partial:
 
-Priority:
+```go-html-template
+{{ partial "image" (...) }}
+```
 
-1. `package.json` → `packageManager`
-2. lock file:
+Reuse it instead of introducing another image system.
 
-   * `pnpm-lock.yaml` → pnpm
-   * `package-lock.json` → npm
-   * `yarn.lock` → yarn
-   * `bun.lock` / `bun.lockb` → bun
-3. otherwise inspect the existing project before choosing
+Use meaningful alt text and lazy loading for below-the-fold images.
 
-Do not change package managers unless explicitly requested.
+## Tailwind and CSS
 
----
+This project uses Tailwind CSS v4 with the existing Hugoplate CSS-first setup.
 
-# Development
+Do not create `tailwind.config.js`.
 
-Before completing changes, run an appropriate build check.
+Project-specific CSS overrides live in:
 
-At minimum:
+```text
+assets/css/custom.css
+```
+
+Preserve the existing dark, minimal punk/garage-rock visual style.
+
+Avoid unnecessary arbitrary values, `!important`, or unrelated CSS refactors.
+
+## Package manager and commands
+
+This repository uses pnpm, confirmed by:
+
+```text
+pnpm-lock.yaml
+```
+
+Useful scripts from `package.json`:
 
 ```sh
-hugo
+pnpm dev
+pnpm build
+pnpm preview
+pnpm format
 ```
 
-If the project has an existing package-script build process that performs additional required Tailwind/theme generation, use that as well.
+Use `pnpm build` as the main production build verification because it runs the theme generator and Hugo production build together.
 
-Do not rewrite working build tooling unnecessarily.
+Do not change package managers.
 
-Do not commit generated `public/` files unless the repository already intentionally tracks them.
+## Hugo configuration
 
----
+Main Hugo configuration:
 
-# General development principles
+```text
+hugo.toml
+```
 
-* Prefer the simplest implementation that solves the task.
-* Preserve the existing architecture.
-* Do not introduce React, Vue, Next.js, or another frontend framework.
-* Prefer Hugo templates and vanilla JavaScript.
-* Keep changes focused on the requested task.
-* Do not perform unrelated refactors.
-* Keep content editable through Hugo front matter when practical.
-* Preserve the site's existing dark, minimal punk/garage-rock visual style.
+Current production base URL:
 
----
+```text
+https://arthurgorries.com/
+```
 
-# Cloudflare
+Taxonomy and term pages are disabled.
 
-The site uses Cloudflare Workers with static assets.
+The Hugo security configuration explicitly allows the Tailwind CLI.
 
-Worker entry point:
+Do not change Hugo version/configuration as part of unrelated work.
+
+## Copy style
+
+Arthur Gorries copy should be:
+
+- short
+- dry
+- direct
+- young
+- understated
+- slightly abrasive
+- occasionally self-deprecating
+
+Avoid generic music-marketing language such as "unforgettable night", "electrifying performance", "amazing crowd", or "taking the scene by storm".
+
+Existing tone examples include:
+
+- "gave him a bass, and made the problem worse"
+- "Come see whether this was a good idea."
+- "The name came from the prison down the road. Wacol has worse landmarks."
+
+## Cloudflare
+
+Cloudflare Worker entry point:
 
 ```text
 src/index.js
 ```
 
-Static site assets are served through:
-
-```js
-env.ASSETS
-```
-
-API requests are handled by the Worker.
-
-Cloudflare configuration lives in:
+Cloudflare configuration:
 
 ```text
 wrangler.jsonc
 ```
 
-Do not put secrets in `wrangler.jsonc`.
-
----
-
-# Newsletter signup
-
-Current endpoint:
+Static Hugo output is served from:
 
 ```text
-POST /api/subscribe
+./public
 ```
 
-Successful signup redirects to:
+through the `ASSETS` binding.
+
+API routes run through the Worker first for:
 
 ```text
-/?signup=success#newsletter
+/api/*
 ```
 
-Invalid and failed submissions use equivalent `signup` query-string states.
-
-The website signup flow is:
+D1 binding:
 
 ```text
-Website form
-    |
-    v
-Cloudflare Worker
-    |
-    +--> D1
-    |
-    +--> Brevo API
+DB
 ```
-
-## D1 is guaranteed capture
-
-D1 is the site's guaranteed subscriber record.
 
 Database:
 
@@ -197,216 +227,87 @@ Database:
 arthurgorries-db
 ```
 
-Worker binding:
+Never commit API keys, webhook tokens, Cloudflare credentials, or other secrets.
+
+## Newsletter
+
+Newsletter signup endpoint:
 
 ```text
-DB
+POST /api/subscribe
 ```
 
-Table:
+Current flow:
 
 ```text
-subscribers
+website form
+-> D1 subscriber write
+-> Brevo contact sync
+-> redirect to /?signup=success#newsletter
 ```
 
-Existing core fields:
+D1 is the guaranteed capture. A Brevo API failure must not turn a successful D1 signup into a failed website signup.
 
-```text
-id
-name
-email
-created_at
-```
-
-Normalize email addresses to lowercase before storage and comparison.
-
-A successful D1 write means the website signup is successful.
-
-A Brevo failure must not cause a successful D1 signup to be reported as failed.
-
----
-
-# Brevo
-
-Brevo contact list ID:
+Brevo list ID:
 
 ```text
 2
 ```
 
-The Brevo API key is available through the Cloudflare Worker secret:
+Brevo API secret:
 
 ```text
 BREVO_API_KEY
 ```
 
-Never hard-code, print, or commit this value.
-
-Website subscribers are synced to Brevo through the Contacts API using:
-
-```js
-listIds: [2]
-updateEnabled: true
-```
-
-Brevo is the operational authority for whether somebody should currently receive marketing email.
-
-D1 remains the site's record of the subscription lifecycle.
-
----
-
-# Error handling
-
-## Validation or D1 failure
-
-If form processing or D1 storage fails:
-
-* log the error
-* do not report signup success
-* redirect using the existing error state
-
-## Brevo failure
-
-If D1 succeeds but Brevo fails:
-
-* retain the D1 subscriber
-* still report signup success to the visitor
-* log the Brevo failure
-* track the failed sync once sync-status tracking exists
-
-Do not throw Brevo API failures into the outer D1/form failure handler.
-
----
-
-# Pending work
-
-## 1. Track Brevo sync status in D1
-
-Add persistent sync tracking.
-
-Suggested fields:
+The Worker already tracks successful Brevo syncs using:
 
 ```text
-brevo_synced INTEGER NOT NULL DEFAULT 0
-brevo_synced_at TEXT NULL
+brevo_synced
+brevo_synced_at
 ```
 
-After a successful Brevo API response:
+Do not treat sync-status tracking as pending work.
 
-```text
-brevo_synced = 1
-brevo_synced_at = current timestamp
-```
+## Brevo unsubscribe webhook
 
-A failed Brevo request must leave the subscriber identifiable as unsynced.
-
-Do not overwrite an existing successful sync status with `0` simply because the same subscriber submits again.
-
-Do not implement automatic retry/reconciliation unless explicitly requested.
-
----
-
-## 2. Brevo unsubscribe webhook
-
-Implement:
+The Worker already contains:
 
 ```text
 POST /api/brevo-webhook
 ```
 
-Desired flow:
+and expects the secret:
 
 ```text
-Brevo unsubscribe
-    |
-    v
-/api/brevo-webhook
-    |
-    v
-D1 subscriber updated
+BREVO_WEBHOOK_TOKEN
 ```
 
-Do not delete subscribers when they unsubscribe.
-
-Add explicit subscription state such as:
+The code attempts to update D1 subscriber fields including:
 
 ```text
-status = subscribed | unsubscribed
+status
 unsubscribed_at
 ```
 
-Requirements:
+Known issue: an unsubscribe performed in Brevo has not yet been confirmed to register correctly in D1. Do not assume the webhook flow is working end-to-end. When this issue is revisited, diagnose the existing implementation before rewriting it.
 
-* verify the current Brevo webhook payload against Brevo documentation
-* process unsubscribe events relevant to list ID `2`
-* normalize emails before lookup
-* make processing idempotent
-* ignore unrelated events safely
-* protect the webhook using an appropriate Brevo-compatible security mechanism
-* never hard-code webhook secrets
+## General development rules
 
----
+- Inspect relevant existing files before editing.
+- Make the smallest change that solves the task.
+- Preserve the existing architecture.
+- Do not introduce React, Vue, Next.js, or another frontend framework.
+- Prefer Hugo templates, Tailwind, and vanilla JavaScript.
+- Do not perform unrelated refactors.
+- Do not modify generated `public/` output unless specifically required.
+- Do not commit secrets.
+- Do not rewrite Git history.
 
-## 3. Welcome email
+Before finishing a coding task:
 
-Brevo should eventually send a welcome email automatically when a new contact is added to list `2`.
-
-This is configured in Brevo rather than implemented in the website Worker unless explicitly requested otherwise.
-
----
-
-## 4. Existing pre-Brevo subscribers
-
-Some subscribers may exist in D1 from before Brevo integration was enabled.
-
-Do not assume all existing D1 subscribers already exist in Brevo.
-
-For the current small list, manual reconciliation is acceptable.
-
----
-
-# D1 schema changes
-
-Schema changes must be additive and safe.
-
-Do not run destructive production database operations unless explicitly requested.
-
-When a task requires a schema change:
-
-1. modify project migration/schema files if the project uses them
-2. provide the exact SQL required for production D1
-3. explain how to verify the migration
-
-Do not delete subscriber records as part of unsubscribe handling.
-
----
-
-# Secrets
-
-Never commit:
-
-* Brevo API keys
-* webhook secrets
-* Cloudflare API tokens
-* credentials
-* private tokens
-
-Secrets belong in Cloudflare Worker secrets/environment configuration.
-
----
-
-# Git
-
-Do not:
-
-* rewrite Git history
-* commit secrets
-* create unrelated changes
-
-Before finishing a task:
-
-* run relevant checks
-* inspect the diff
-* report files changed
-* report any SQL that must be run
-* report any Cloudflare or Brevo configuration the user must perform manually
+1. run `pnpm build`
+2. confirm there are no Hugo/template/build errors
+3. inspect the diff
+4. report which files changed
+5. report any manual Cloudflare, Brevo, or D1 steps still required
