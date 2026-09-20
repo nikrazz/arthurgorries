@@ -15,14 +15,13 @@ banner:
     link: ""
 
 next_gig:
-  title: "First gig. No turning back now."
+  title: "Well, that worked."
   content: |-
-    Arthur Gorries play their first show on 16 September at HeelFools Emerging Artists at Black Bear Lodge, Fortitude Valley.
+    First gig done. Black Bear Lodge was loud, the crowd was into it, and nobody told us to stop.
 
-    Come see whether this was a good idea.
-  button:
-    title: "Get tickets"
-    link: "https://tickets.oztix.com.au/outlet/event/7eb41863-5920-4439-a718-fb1c85938312"
+    Thanks to everyone who came down. We’ll do it again.
+  image: "/images/black-bear-lodge-gig.jpg"
+  image_alt: "Arthur Gorries performing at Black Bear Lodge"
 
 newsletter:
   title: "Let's keep in touch"
